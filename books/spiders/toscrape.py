@@ -20,11 +20,10 @@ class ToscrapeSpider(scrapy.Spider):
         item = {}
         product = response.css("div.product_main")
         item["title"] = product.css("h1 ::text").extract_first()
-        item["price"] = product.css("p.price_color ::text").re_first("(\d+.\d+)")
-        item["stock"] = product.xpath(
-            "normalize-space(./p[contains(@class, 'availability')])"
-        ).re_first("(\d+) available")
         item['category'] = response.xpath(
             "//ul[@class='breadcrumb']/li[@class='active']/preceding-sibling::li[1]/a/text()"
+        ).extract_first()
+        item['description'] = response.xpath(
+            "//div[@id='product_description']/following-sibling::p/text()"
         ).extract_first()
         yield item
